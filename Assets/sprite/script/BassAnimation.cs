@@ -35,12 +35,7 @@ public class BassAnimation : MonoBehaviour
             fireCount = 0;
         }
 
-        if (obj == null)
-        {
-            return;
-        }
-
-        if (obj.name == "bass")
+        if (obj != null && obj.name == "bass")
         {
             clickCounter += 1;
             fireCount += 1;
@@ -48,7 +43,7 @@ public class BassAnimation : MonoBehaviour
 
             if (fireCount == 3)
             {
-                Debug.Log("fire!");
+                //🔥のドット絵のエフェクト
                 return;
             }
 
