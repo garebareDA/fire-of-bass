@@ -7,6 +7,7 @@ public class BassAnimation : MonoBehaviour
     Animator handRghit;
     Animator body;
     Animator handLeft;
+    int clickCounter;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,7 @@ public class BassAnimation : MonoBehaviour
             Debug.Log(obj.ToString());
             handRghit.Play("play");
             int leftHandRandom = Random.RandomRange(0, 4);
+            clickCounter = clickCounter + 1;
 
             switch (leftHandRandom)
             {
@@ -51,8 +53,26 @@ public class BassAnimation : MonoBehaviour
                     break;
             }
 
+            if (clickCounter == 20)
+            {
+                clickCounter = 0;
+            }
 
+            switch (clickCounter)
+            {
+                case 3:
+                    body.Play("move");
+                    transform.Translate(0.1f, 0, 0);
+                    break;
+                case 4:
+                    body.Play("stay");
+                    break;
+                default:
+                    break;
+            }
 
+            Debug.Log(clickCounter);
+ 
         }
     }
 
