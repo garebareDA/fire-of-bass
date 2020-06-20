@@ -4,22 +4,37 @@ using UnityEngine;
 
 public class BassAnimation : MonoBehaviour
 {
+    [SerializeField] AudioClip[] clips;
+
     Animator handRghit;
     Animator body;
     Animator handLeft;
+    protected AudioSource source;
     int clickCounter;
+    float timeCountUp = -1f;
+    float timeOut = 0f;
+    int fireCount = 0;
     // Start is called before the first frame update
     void Start()
     {
         handRghit = transform.GetChild(0).gameObject.GetComponent<Animator>();
         body = transform.GetChild(1).gameObject.GetComponent<Animator>();
         handLeft = transform.GetChild(2).gameObject.GetComponent<Animator>();
+        source = GetComponents<AudioSource>()[0];
     }
 
     // Update is called once per frame
     void Update()
     {
+        timeCountUp -= Time.deltaTime;
         GameObject obj = getClickObject();
+
+        if (timeCountUp < timeOut)
+        {
+            timeCountUp = -1f;
+            fireCount = 0;
+        }
+
         if (obj == null)
         {
             return;
@@ -27,52 +42,30 @@ public class BassAnimation : MonoBehaviour
 
         if (obj.name == "bass")
         {
-            Debug.Log(obj.ToString());
-            handRghit.Play("play");
-            int leftHandRandom = Random.RandomRange(0, 4);
-            clickCounter = clickCounter + 1;
+            clickCounter += 1;
+            fireCount += 1;
+            timeCountUp = 0.5f;
 
-            switch (leftHandRandom)
+            if (fireCount == 3)
             {
-                case 0:
-                    handLeft.Play("idle");
-                    break;
-                case 1:
-                    handLeft.Play("onehgit");
-                    break;
-                case 2:
-                    handLeft.Play("mid");
-                    break;
-                case 3:
-                    handLeft.Play("onedown");
-                    break;
-                case 4:
-                    handLeft.Play("down");
-                    break;
-                default:
-                    break;
+                Debug.Log("fire!");
+                return;
             }
 
-            if (clickCounter == 20)
+            source.Stop();
+            source.PlayOneShot(clips[Random.Range(0, clips.Length)]);
+            int leftHandRandom = Random.Range(0, 4);
+
+            handRghit.Play("play");
+
+
+            pixelHand(leftHandRandom);
+            pixelMove(clickCounter);
+
+            if (clickCounter == 60)
             {
                 clickCounter = 0;
             }
-
-            switch (clickCounter)
-            {
-                case 3:
-                    body.Play("move");
-                    transform.Translate(0.1f, 0, 0);
-                    break;
-                case 4:
-                    body.Play("stay");
-                    break;
-                default:
-                    break;
-            }
-
-            Debug.Log(clickCounter);
- 
         }
     }
 
@@ -94,5 +87,83 @@ public class BassAnimation : MonoBehaviour
         }
 
         return clickedGameObject;
+    }
+
+    private void pixelMove(int random)
+    {
+        switch (random)
+        {
+            case 3:
+                moveRhigt();
+                break;
+            case 4:
+                body.Play("stay");
+                break;
+            case 10:
+                moveRhigt();
+                break;
+            case 18:
+                moveRhigt();
+                break;
+            case 20:
+                body.Play("stay");
+                break;
+            case 27:
+                moveLeft();
+                break;
+            case 30:
+                moveLeft();
+                break;
+            case 35:
+                body.Play("stay");
+                break;
+            case 40:
+                moveLeft();
+                break;
+            case 54:
+                body.Play("stay");
+                break;
+            case 60:
+                moveRhigt();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void pixelHand(int random)
+    {
+        switch (random)
+        {
+            case 0:
+                handLeft.Play("idle");
+                break;
+            case 1:
+                handLeft.Play("onehgit");
+                break;
+            case 2:
+                handLeft.Play("mid");
+                break;
+            case 3:
+                handLeft.Play("onedown");
+                break;
+            case 4:
+                handLeft.Play("down");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void moveRhigt()
+    {
+        body.Play("move");
+        transform.Translate(0.05f, 0, 0);
+    }
+
+    private void moveLeft()
+    {
+        body.Play("move");
+        transform.Translate(-0.05f, 0, 0);
     }
 }
