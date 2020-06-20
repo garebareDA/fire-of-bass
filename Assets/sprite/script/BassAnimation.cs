@@ -6,27 +6,45 @@ public class BassAnimation : MonoBehaviour
 {
     [SerializeField] AudioClip[] clips;
 
+    GameObject fires;
+
     Animator handRghit;
     Animator body;
     Animator handLeft;
+    Animator fires1;
+    Animator fires2;
+
     protected AudioSource source;
+
+    int fireCount = 0;
     int clickCounter;
     float timeCountUp = -1f;
     float timeOut = 0f;
-    int fireCount = 0;
+    float timeFireCountUp = -1f;
+    float fireTimeOut = 0f;
+
+    bool IsFire = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        fires = GameObject.Find("fires");
         handRghit = transform.GetChild(0).gameObject.GetComponent<Animator>();
         body = transform.GetChild(1).gameObject.GetComponent<Animator>();
+        fires.SetActive(false);
         handLeft = transform.GetChild(2).gameObject.GetComponent<Animator>();
         source = GetComponents<AudioSource>()[0];
+        
+        fires1 = fires.transform.GetChild(0).gameObject.GetComponent<Animator>();
+        fires2 = fires.transform.GetChild(1).gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         timeCountUp -= Time.deltaTime;
+        timeFireCountUp -= Time.deltaTime;
+  
         GameObject obj = getClickObject();
 
         if (timeCountUp < timeOut)
@@ -35,16 +53,28 @@ public class BassAnimation : MonoBehaviour
             fireCount = 0;
         }
 
+        Debug.Log(timeFireCountUp);
+
+        if (timeFireCountUp < fireTimeOut && IsFire == true)
+        {
+            IsFire = false;
+            fires.SetActive(false);
+        }
+
         if (obj != null && obj.name == "bass")
         {
             clickCounter += 1;
             fireCount += 1;
             timeCountUp = 0.5f;
 
-            if (fireCount == 3)
+            if (fireCount == 3 && IsFire == false)
             {
-                //🔥のドット絵のエフェクト
-                return;
+                Debug.Log("fire!");
+                IsFire = true;
+                timeFireCountUp = 2f;
+                fires.SetActive(true);
+                fires1.Play("fireEfect");
+                fires2.Play("fireEfect");
             }
 
             source.Stop();
