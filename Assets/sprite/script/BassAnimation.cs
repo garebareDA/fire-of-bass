@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class BassAnimation : MonoBehaviour
 {
+    Animator handRghit;
+    Animator body;
+    Animator handLeft;
     // Start is called before the first frame update
     void Start()
     {
-        
+        handRghit = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        body = transform.GetChild(1).gameObject.GetComponent<Animator>();
+        handLeft = transform.GetChild(2).gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,6 +27,32 @@ public class BassAnimation : MonoBehaviour
         if (obj.name == "bass")
         {
             Debug.Log(obj.ToString());
+            handRghit.Play("play");
+            int leftHandRandom = Random.RandomRange(0, 4);
+
+            switch (leftHandRandom)
+            {
+                case 0:
+                    handLeft.Play("idle");
+                    break;
+                case 1:
+                    handLeft.Play("onehgit");
+                    break;
+                case 2:
+                    handLeft.Play("mid");
+                    break;
+                case 3:
+                    handLeft.Play("onedown");
+                    break;
+                case 4:
+                    handLeft.Play("down");
+                    break;
+                default:
+                    break;
+            }
+
+
+
         }
     }
 
