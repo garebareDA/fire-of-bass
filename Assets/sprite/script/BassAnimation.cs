@@ -53,8 +53,6 @@ public class BassAnimation : MonoBehaviour
             fireCount = 0;
         }
 
-        Debug.Log(timeFireCountUp);
-
         if (timeFireCountUp < fireTimeOut && IsFire == true)
         {
             IsFire = false;
