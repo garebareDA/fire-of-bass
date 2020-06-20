@@ -14,9 +14,14 @@ public class BassAnimation : MonoBehaviour
     void Update()
     {
         GameObject obj = getClickObject();
-        if (obj != null)
+        if (obj == null)
         {
-            Debug.Log(obj);
+            return;
+        }
+
+        if (obj.name == "bass")
+        {
+            Debug.Log(obj.ToString());
         }
     }
 
@@ -35,8 +40,6 @@ public class BassAnimation : MonoBehaviour
             {
                 clickedGameObject = hit2d.transform.gameObject;
             }
-
-            Debug.Log(clickedGameObject);
         }
 
         return clickedGameObject;
